@@ -30,6 +30,6 @@ jobs:
         run: |
           git config --local user.name "GitHub Actions"
           git config --local user.email "actions@github.com"
-          git add result.txt
-          git commit -m "Update result.txt with PHP script output"
+          git add result.m3u
+          git commit -m "Update result.m3u with PHP script output"
           git push
