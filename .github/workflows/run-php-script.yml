@@ -1,35 +1,30 @@
-name: Run PHP Script and Update Result
+name: Fetch playlist
 
-# Run every 7 minutes
 on:
   schedule:
-    - cron: "*/7 * * * *"
+    - cron: '*/20 * * * *' 
+  workflow_dispatch:        
 
 jobs:
-  run-php-script:
+  fetch-and-save:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the repository
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      # Step 2: Set up PHP
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1' # Use the PHP version you need
-
-      # Step 3: Run the PHP script and save the output
-      - name: Run PHP script
+      - name: Fetch m3u content
         run: |
-          php script.php > result.m3u
+          curl -sL "https://faridflix.xyz/sp.php" -o crichd.m3u
 
-      # Step 4: Commit and push the changes
-      - name: Commit and push changes
+      - name: Commit and push if changed
         run: |
-          git config --local user.name "GitHub Actions"
-          git config --local user.email "actions@github.com"
-          git add result.m3u
-          git commit -m "Update result.m3u with PHP script output"
-          git push
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add crichd.m3u
+            git commit -m "Update crichd.m3u [$(date '+%Y-%m-%d %H:%M:%S')]"
+            git push
+          else
+            echo "No changes detected."
+          fi
