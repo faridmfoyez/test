@@ -1,0 +1,30 @@
+name: Fetch playlist
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' 
+  workflow_dispatch:        
+
+jobs:
+  fetch-and-save:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Fetch m3u content
+        run: |
+          curl -sL "https://faridflix.xyz/sp.php" -o crichd.m3u
+
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add crichd.m3u
+          if ! git diff-index --quiet HEAD --; then
+            git commit -m "Update crichd.m3u [$(date '+%Y-%m-%d %H:%M:%S')]"
+            git push
+          else
+            echo "No changes detected."
+          fi
