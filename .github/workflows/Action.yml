@@ -20,7 +20,7 @@ jobs:
 
       - name: Fetch m3u content
         run: |
-          curl -sL -H "Authorization: Bearer ${{ secrets.YOUR_SECRET }}" "https://faridflix.xyz/sp.php" -o crichd.m3u
+         curl -sL "https://faridflix.xyz/sp.php" -o crichd.m3u
 
       - name: Commit and push if changed
         run: |
