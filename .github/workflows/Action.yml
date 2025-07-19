@@ -20,7 +20,7 @@ jobs:
 
       - name: Fetch m3u content
         run: |
-         curl -sL "https://faridflix.xyz/sp.php" -o crichd.m3u
+          curl -sL "${{ secrets.fatch_url }}" -o crichd.m3u
 
       - name: Commit and push if changed
         run: |
