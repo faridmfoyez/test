@@ -1,9 +1,9 @@
 #EXTM3U
 #EXTINF:-1,ptvpk
-https://d5.merichunidya.com:1686/hls/ptvpk.m3u8?md5=25M7cykRhNH04AQSDCtRsQ&expires=1753139340
+https://d5.merichunidya.com:1686/hls/ptvpk.m3u8?md5=f68R0ruUO0hHZzDBLoI2Gw&expires=1753143465
 #EXTINF:-1,star1in
-https://off1.gogohaalmal.com:1686/hls/star1in.m3u8?md5=y1QCIG28VMDL27M-AEsygw&expires=1753139341
+https://d1.merichunidya.com:1686/hls/star1in.m3u8?md5=WU_ajcXFhbqV2VdEB6ICvw&expires=1753143465
 #EXTINF:-1,starhindi
-https://d4.merichunidya.com:1686/hls/starhindi.m3u8?md5=24HKp8M3VUgiemi111Ag6A&expires=1753139341
+https://d2.merichunidya.com:1686/hls/starhindi.m3u8?md5=GKj1eUStDNS_e1cLZr7fuA&expires=1753143466
 #EXTINF:-1,bbtsp1
-https://d2.merichunidya.com:1686/hls/bbtsp1.m3u8?md5=yO1bOeXv1HBbOqIPkje1XA&expires=1753139342
+https://off1.gogohaalmal.com:1686/hls/bbtsp1.m3u8?md5=3MMOy5Fr2nLQn6z5326ujw&expires=1753143467
