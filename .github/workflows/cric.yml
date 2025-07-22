@@ -12,7 +12,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Required to push changes back
+          fetch-depth: 0  # Required for git history
+          persist-credentials: true  # Required to push changes
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -25,29 +26,34 @@ jobs:
       - name: Unzip Protected Script
         run: |
           if [ -f run.zip ]; then
-            unzip -P "${{ secrets.fatch_pass }}" -o run.zip || echo "Unzip failed"
+            unzip -P "${{ secrets.fatch_pass }}" -o run.zip || exit 1
           else
-            echo "run.zip not found"
+            echo "Error: run.zip not found"
             exit 1
           fi
 
       - name: Run Python Script
-        run: python run.py || echo "Python script failed"
+        run: python run.py || exit 1
 
       - name: Delete Script After Run
         if: always()
         run: rm -f run.py
 
-      - name: Commit Changes
+      - name: Commit and Push Changes
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add cric.m3u
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
+          if [ -f cric.m3u ]; then
+            git config --global user.name "GitHub Actions"
+            git config --global user.email "actions@github.com"
+            git add cric.m3u
+            if git diff --cached --quiet; then
+              echo "No changes to commit"
+            else
+              git commit -m "Auto-update cric.m3u [$(date +'%Y-%m-%d %H:%M:%S')]"
+              git push
+            fi
           else
-            git commit -m "Update cric.m3u [$(TZ='Asia/Dhaka' date '+%Y-%m-%d %H:%M:%S')]"
-            git push
+            echo "Error: cric.m3u file not found"
+            exit 1
           fi
 
 permissions:
