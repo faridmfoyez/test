@@ -19,13 +19,13 @@ jobs:
       - name: Install jq
         run: sudo apt-get install -y jq
 
-      - name: Download api.json (raw json)
+      - name: Download toffee_api.json (raw json)
         run: |
-          curl -sL "${{ secrets.fatch_toffee }}" -o api.json
+          curl -sL "${{ secrets.fatch_toffee }}" -o toffee_api.json
 
       - name: Download JSON and convert to ott_navigator.m3u
         run: |
-          echo "#EXTM3U" > ott_navigator.m3u
+          echo "#EXTM3U" > toffee_ott_navigator.m3u
 
           # Process the JSON file we downloaded earlier
           jq -c '.response[]' api.json | while read -r item; do
