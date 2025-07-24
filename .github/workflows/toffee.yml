@@ -21,7 +21,7 @@ jobs:
 
       - name: Download api.json (raw json)
         run: |
-          curl -sL "https://zohraflix.xyz/playlist.php" -o api.json
+          curl -sL "${{ secrets.fatch_toffee }}" -o api.json
 
       - name: Download JSON and convert to ott_navigator.m3u
         run: |
