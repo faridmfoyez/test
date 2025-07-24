@@ -44,7 +44,7 @@ jobs:
 
       - name: Generate JSON playlist
         run: |
-          jq -c '.response[]' toffee_api.json | jq -s '{channels: [.[] | {name: .name, logo: .logo, cookie: .headers.cookie, link: .link}]}' > toffee_ns.m3u
+          jq '.response | {channels: [.[] | {name: .name, logo: .logo, cookie: .headers.cookie, link: .link}]}' toffee_api.json > toffee_ns.m3u
           
       - name: Commit and push if changed
         run: |
