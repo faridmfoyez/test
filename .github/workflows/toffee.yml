@@ -1,0 +1,55 @@
+name: Fetch playlist
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+
+jobs:
+  fetch-and-generate:
+    runs-on: ubuntu-latest
+
+     permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Download api.json (raw json)
+        run: |
+          curl -sL "https://zohraflix.xyz/playlist.php" -o api.json
+
+      - name: Download JSON and convert to ott_navigator.m3u
+        run: |
+          echo "#EXTM3U" > ott_navigator.m3u
+
+          # Process the JSON file we downloaded earlier
+          jq -c '.response[]' api.json | while read -r item; do
+            name=$(echo "$item" | jq -r '.name')
+            category=$(echo "$item" | jq -r '.category_name')
+            logo=$(echo "$item" | jq -r '.logo')
+            link=$(echo "$item" | jq -r '.link')
+            cookie=$(echo "$item" | jq -r '.headers.cookie')
+            user_agent=$(echo "$item" | jq -r '.headers."user-agent"')
+
+            echo "#EXTINF:-1 group-title=\"$category\" tvg-chno=\"\" tvg-id=\"\" tvg-logo=\"$logo\", $name" >> ott_navigator.m3u
+            echo "#EXTVLCOPT:http-user-agent=$user_agent" >> ott_navigator.m3u
+            echo "#EXTHTTP:{\"cookie\":\"$cookie\"}" >> ott_navigator.m3u
+            echo "$link" >> ott_navigator.m3u
+          done
+
+      - name: Commit and push if any changes
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add ott_navigator.m3u
+            git commit -m "Update playlist [$(date '+%Y-%m-%d %H:%M:%S')]"
+            git push
+          else
+            echo "No changes detected."
+          fi
