@@ -9,7 +9,7 @@ jobs:
   fetch-and-save:
     runs-on: ubuntu-latest
 
-     permissions:
+    permissions:
       contents: write
 
     steps:
