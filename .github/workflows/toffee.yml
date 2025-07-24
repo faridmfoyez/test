@@ -72,7 +72,7 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add toffee_api.json toffee_ott.m3u
+          git add toffee_api.json toffee_ott.m3u toffee_ns.m3u
           if ! git diff-index --quiet HEAD --; then
             git commit -m "Updated [$(TZ='Asia/Dhaka' date '+%Y-%m-%d %H:%M:%S')]"
             git push
