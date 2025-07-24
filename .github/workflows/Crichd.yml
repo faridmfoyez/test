@@ -1,4 +1,4 @@
-name: Fetch playlist
+name: Fetch Crichd playlist
 
 on:
   schedule:
