@@ -44,30 +44,8 @@ jobs:
 
       - name: Generate JSON playlist
         run: |
-          echo "{" > toffee_ns.m3u
-          echo "  \"channels\": [" >> toffee_ns.m3u
+          jq -c '.response[]' toffee_api.json | jq -s '{channels: [.[] | {name: .name, logo: .logo, cookie: .headers.cookie, link: .link}]}' > toffee_ns.m3u
           
-          # Process the JSON file we downloaded earlier
-          jq -c '.response[]' toffee_api.json | while read -r item; do
-            name=$(echo "$item" | jq -r '.name')
-            logo=$(echo "$item" | jq -r '.logo')
-            link=$(echo "$item" | jq -r '.link')
-            cookie=$(echo "$item" | jq -r '.headers.cookie')
-            
-            echo "    {" >> toffee_ns.m3u
-            echo "      \"name\": \"$name\"," >> toffee_ns.m3u
-            echo "      \"logo\": \"$logo\"," >> toffee_ns.m3u
-            echo "      \"cookie\": \"$cookie\"," >> toffee_ns.m3u
-            echo "      \"link\": \"$link\"" >> toffee_ns.m3u
-            echo "    }," >> toffee_ns.m3u
-          done
-          
-          # Remove the last comma to make valid JSON
-          sed -i '$ s/,$//' toffee_ns.m3u
-          
-          echo "  ]" >> toffee_ns.m3u
-          echo "}" >> toffee_ns.m3u
-
       - name: Commit and push if changed
         run: |
           git config --global user.name "GitHub Actions"
