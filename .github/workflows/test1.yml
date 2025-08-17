@@ -13,6 +13,8 @@ jobs:
       # Step 1: Check out the repository
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Needed to push changes back
 
       # Step 2: Set up PHP
       - name: Set up PHP
@@ -23,13 +25,20 @@ jobs:
       # Step 3: Run the PHP script and save the output
       - name: Run PHP script
         run: |
-          php script.php > result.txt
+          php script.php > result.txt || echo "PHP script failed"
 
       # Step 4: Commit and push the changes
       - name: Commit and push changes
         run: |
+          # Only commit if there are changes
           git config --local user.name "GitHub Actions"
           git config --local user.email "actions@github.com"
           git add result.txt
-          git commit -m "Update result.txt with PHP script output"
-          git push
+          
+          # Check if there are changes to commit
+          if git diff --quiet --cached; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update result.txt with PHP script output [skip ci]"
+            git push origin HEAD:${{ github.ref }}
+          fi
