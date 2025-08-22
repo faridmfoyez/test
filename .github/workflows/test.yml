@@ -21,7 +21,7 @@ jobs:
       - name: Fetch m3u content
         id: fetch
         run: |
-          if curl -sLf "${{ secrets.ayna_url }}" -o test.m3u; then
+          if curl -sLf "${{ secrets.ayna_url }}" -o ayna.m3u; then
             echo "status=success" >> $GITHUB_OUTPUT
             echo "Download successful"
           else
@@ -35,7 +35,7 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add test.m3u
+          git add ayna.m3u
           if ! git diff-index --quiet HEAD --; then
             git commit -m "Updated [$(TZ='Asia/Dhaka' date '+%Y-%m-%d %H:%M:%S')]"
             git push
