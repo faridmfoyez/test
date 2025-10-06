@@ -1,0 +1,44 @@
+name: Fetch Ayna playlist
+
+on:
+  schedule:
+    - cron: '*/50 * * * *' 
+  workflow_dispatch:        
+
+jobs:
+  fetch-and-save:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Fetch m3u content
+        id: fetch
+        run: |
+          if curl -sLf "${{ secrets.ayna_sp }}" -o aysp.m3u; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "Download successful"
+          else
+            echo "status=failed" >> $GITHUB_OUTPUT
+            echo "Download failed"
+            exit 1
+          fi
+
+      - name: Commit and push if changed
+        if: steps.fetch.outputs.status == 'success'
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add aysp.m3u
+          if ! git diff-index --quiet HEAD --; then
+            git commit -m "Updated [$(TZ='Asia/Dhaka' date '+%Y-%m-%d %H:%M:%S')]"
+            git push
+          else
+            echo "No changes detected - skipping commit"
+          fi
