@@ -21,7 +21,7 @@ jobs:
       - name: Fetch m3u content
         id: fetch
         run: |
-          if curl -sLf "${{ secrets.ayna_sp }}" -o aysp.m3u; then
+          if curl -sLf "${{ secrets.aysp }}" -o aysp.m3u; then
             echo "status=success" >> $GITHUB_OUTPUT
             echo "Download successful"
           else
