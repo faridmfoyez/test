@@ -2,7 +2,7 @@ name: Fetch Ayna playlist
 
 on:
   schedule:
-    - cron: '*/45 * * * *' 
+    - cron: '*/90 * * * *' 
   workflow_dispatch:        
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Fetch m3u content
         run: |
-          curl -sL "${{ secrets.ayna_url }}" -o ayna.m3u
+          curl -sL "${{ secrets.ayna }}" -o ayna.m3u
 
       - name: Commit and push if changed
         run: |
